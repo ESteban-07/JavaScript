@@ -177,22 +177,23 @@ const deshabilitarBotones = () => {
 const imprimirGanador = () => {
   console.log({ puntosComputadora, puntosJugador });
 
-  // Empate
-  if (puntosJugador === puntosComputadora) {
-    console.log('empate');
-    return;
-  }
-
-  // PC gana
-  if (puntosJugador < 21) {
-    if (puntosComputadora > puntosJugador && puntosComputadora <= 21) {
-      console.log('pc gana');
+  if (puntosJugador <= 21) {
+    if (puntosComputadora > 21 || puntosJugador > puntosComputadora) {
+      desplegarAlerta({ title: 'Ganaste!', icon: 'sucess' });
+    } else if (puntosJugador === puntosComputadora) {
+      desplegarAlerta({ title: 'Empate!', icon: 'warning' });
     } else {
-      console.log('jugador gana');
+      desplegarAlerta({ title: 'Perdiste, PC gana!', icon: 'error' });
     }
-  } else if (puntosJugador === 21) {
-    console.log('Jugador gana');
   } else {
-    console.log('PC gana');
+    desplegarAlerta({ title: 'Perdiste, PC gana!', icon: 'error' });
   }
+};
+
+const desplegarAlerta = ({ title, icon }) => {
+  return Swal.fire({
+    title,
+    icon,
+    text: `Tú: ${puntosJugador} - PC: ${puntosComputadora}`,
+  });
 };
