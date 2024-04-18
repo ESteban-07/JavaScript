@@ -5,23 +5,33 @@
 (() => {
   'use strict';
 
-  let deck       = [];
-  const types    = ['C', 'D', 'H', 'S'];
-  const specials = ['A', 'J', 'Q', 'K'];
+  let deck = [];
+  const types = ['C', 'D', 'H', 'S'],
+    specials = ['A', 'J', 'Q', 'K'];
 
   let puntosJugador = 0,
     puntosComputadora = 0;
 
   // Referencias del HTML
-  const btnNuevo = document.querySelector('#btnNuevo');
-  const btnPedir = document.querySelector('#btnPedir');
-  const btnDetener = document.querySelector('#btnDetener');
-  const puntosHTML = document.querySelectorAll('small');
-  const divJugadorCartas = document.querySelector('#jugador-cartas');
-  const divComputadoraCartas = document.querySelector('#computadora-cartas');
+  const btnNuevo = document.querySelector('#btnNuevo'),
+    btnPedir = document.querySelector('#btnPedir'),
+    btnDetener = document.querySelector('#btnDetener');
+
+  const divJugadorCartas = document.querySelector('#jugador-cartas'),
+    divComputadoraCartas = document.querySelector('#computadora-cartas'),
+    puntosHTML = document.querySelectorAll('small');
+
+  // Esta función inicializa el juego
+  window.addEventListener('load', () => inicializarJuego());
+
+  const inicializarJuego = () => {
+    deck = crearDeck();
+  };
 
   // Esta función crea una nueva baraja
   const crearDeck = () => {
+    deck = [];
+
     // 2C, 2D, 2H, 2S
     for (let i = 2; i <= 10; i++) {
       for (let type of types) {
@@ -35,11 +45,8 @@
       }
     }
 
-    deck = _.shuffle(deck);
-    return deck;
+    return _.shuffle(deck);
   };
-
-  crearDeck();
 
   // Esta función me permite tomar una carta
   const pedirCarta = () => {
@@ -47,8 +54,7 @@
       throw 'No hay cartas en el deck';
     }
 
-    const carta = deck.pop();
-    return carta;
+    return deck.pop();
   };
 
   const valorCarta = (carta) => {
@@ -59,10 +65,10 @@
 
   // Eventos
   btnPedir.addEventListener('click', () => {
-    insertarCarta('jugador', puntosJugador);
+    insertarCarta('jugador');
 
     if (puntosJugador >= 21) {
-      turnoComputadora();
+      turnoComputadora(puntosJugador);
     }
   });
 
@@ -77,7 +83,6 @@
       puntosHTML[1].innerHTML = puntosComputadora;
     }
 
-    // divJugadorCartas.innerHTML += `<img class="carta" src="./assets/cartas/${carta}.png" alt="carta" />`;
     const imgCarta = document.createElement('img');
     imgCarta.src = `./assets/cartas/${carta}.png`;
     imgCarta.classList.add('carta');
@@ -89,16 +94,32 @@
     }
   };
 
-  // Nuevo Juego
-  btnNuevo.addEventListener('click', () => window.location.reload());
+  const reiniciarJuego = () => {
+    for (let puntos of puntosHTML) {
+      puntos.innerHTML = '0';
+    }
+
+    divJugadorCartas.innerHTML = '';
+    divComputadoraCartas.innerHTML = '';
+
+    puntosJugador = 0;
+    puntosComputadora = 0;
+
+    btnPedir.disabled = false;
+    btnDetener.disabled = false;
+  };
+
+  btnNuevo.addEventListener('click', () => {
+    inicializarJuego();
+    reiniciarJuego();
+  });
 
   // turno de la computadora
   const turnoComputadora = (puntosMinimos) => {
     do {
       insertarCarta('pc');
-      if (puntosMinimos >= 21) {
-        break;
-      }
+
+      if (puntosMinimos >= 21) break;
     } while (puntosComputadora < puntosMinimos && puntosMinimos <= 21);
 
     deshabilitarBotones();
