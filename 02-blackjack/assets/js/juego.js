@@ -9,8 +9,9 @@
   const types = ['C', 'D', 'H', 'S'],
     specials = ['A', 'J', 'Q', 'K'];
 
-  let puntosJugador = 0,
-    puntosComputadora = 0;
+  let puntosJugadores = [],
+    puntosJugador,
+    puntosComputadora;
 
   // Referencias del HTML
   const btnNuevo = document.querySelector('#btnNuevo'),
@@ -24,8 +25,16 @@
   // Esta función inicializa el juego
   window.addEventListener('load', () => inicializarJuego());
 
-  const inicializarJuego = () => {
+  const inicializarJuego = (numjugadores = 2) => {
     deck = crearDeck();
+
+    puntosJugadores = [];
+
+    for (let i = 0; i < numjugadores; i++) {
+      puntosJugadores.push(0);
+    }
+
+    console.log({ puntosJugadores });
   };
 
   // Esta función crea una nueva baraja
@@ -65,24 +74,25 @@
 
   // Eventos
   btnPedir.addEventListener('click', () => {
-    insertarCarta('jugador');
+    const carta = pedirCarta();
+    insertarCarta(carta, 'jugador');
+
+    puntosJugador = acumularPuntos(carta, 0);
 
     if (puntosJugador >= 21) {
       turnoComputadora(puntosJugador);
     }
   });
 
-  const insertarCarta = (turno) => {
-    const carta = pedirCarta();
+  // Turno: 0 = primer jugador y el último será la computadora
+  const acumularPuntos = (carta, turno) => {
+    puntosJugadores[turno] += valorCarta(carta);
+    puntosHTML[turno].innerText = puntosJugadores[turno];
 
-    if (turno === 'jugador') {
-      puntosJugador += valorCarta(carta);
-      puntosHTML[0].innerText = puntosJugador;
-    } else {
-      puntosComputadora += valorCarta(carta);
-      puntosHTML[1].innerHTML = puntosComputadora;
-    }
+    return puntosJugadores[turno];
+  };
 
+  const insertarCarta = (carta, turno) => {
     const imgCarta = document.createElement('img');
     imgCarta.src = `./assets/cartas/${carta}.png`;
     imgCarta.classList.add('carta');
@@ -117,7 +127,10 @@
   // turno de la computadora
   const turnoComputadora = (puntosMinimos) => {
     do {
-      insertarCarta('pc');
+      const carta = pedirCarta();
+      insertarCarta(carta, 'pc');
+
+      puntosComputadora = acumularPuntos(carta, puntosJugadores.length - 1);
 
       if (puntosMinimos >= 21) break;
     } while (puntosComputadora < puntosMinimos && puntosMinimos <= 21);
@@ -127,6 +140,7 @@
 
   // Detener Juego
   btnDetener.addEventListener('click', () => {
+    console.log({ puntosJugador });
     if (!puntosJugador) return;
 
     turnoComputadora(puntosJugador);
