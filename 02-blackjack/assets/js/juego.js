@@ -33,8 +33,6 @@
     for (let i = 0; i < numjugadores; i++) {
       puntosJugadores.push(0);
     }
-
-    console.log({ puntosJugadores });
   };
 
   // Esta función crea una nueva baraja
@@ -75,9 +73,10 @@
   // Eventos
   btnPedir.addEventListener('click', () => {
     const carta = pedirCarta();
-    insertarCarta(carta, 'jugador');
+    const { turno, totalPuntos } = acumularPuntos(carta, 0);
+    puntosJugador = totalPuntos;
 
-    puntosJugador = acumularPuntos(carta, 0);
+    insertarCarta(carta, turno);
 
     if (puntosJugador >= 21) {
       turnoComputadora(puntosJugador);
@@ -89,7 +88,7 @@
     puntosJugadores[turno] += valorCarta(carta);
     puntosHTML[turno].innerText = puntosJugadores[turno];
 
-    return puntosJugadores[turno];
+    return { turno, totalPuntos: puntosJugadores[turno] };
   };
 
   const insertarCarta = (carta, turno) => {
@@ -97,10 +96,11 @@
     imgCarta.src = `./assets/cartas/${carta}.png`;
     imgCarta.classList.add('carta');
 
-    if (turno === 'jugador') {
-      divJugadorCartas.append(imgCarta);
-    } else {
+    // Turno: 0 = primer jugador y el último será la computadora
+    if (turno === puntosJugadores.length - 1) {
       divComputadoraCartas.append(imgCarta);
+    } else {
+      divJugadorCartas.append(imgCarta);
     }
   };
 
@@ -126,11 +126,19 @@
 
   // turno de la computadora
   const turnoComputadora = (puntosMinimos) => {
-    do {
-      const carta = pedirCarta();
-      insertarCarta(carta, 'pc');
+    let carta, turno, totalPuntos;
 
-      puntosComputadora = acumularPuntos(carta, puntosJugadores.length - 1);
+    do {
+      carta = pedirCarta();
+
+      ({ turno, totalPuntos } = acumularPuntos(
+        carta,
+        puntosJugadores.length - 1
+      ));
+
+      insertarCarta(carta, turno);
+
+      puntosComputadora = totalPuntos;
 
       if (puntosMinimos >= 21) break;
     } while (puntosComputadora < puntosMinimos && puntosMinimos <= 21);
@@ -140,7 +148,6 @@
 
   // Detener Juego
   btnDetener.addEventListener('click', () => {
-    console.log({ puntosJugador });
     if (!puntosJugador) return;
 
     turnoComputadora(puntosJugador);
