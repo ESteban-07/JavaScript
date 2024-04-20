@@ -1,38 +1,45 @@
-// Patrón Módulo
+/**
+ * Patrón Módulo
+ * - - - - - - -
+ *
+ * Las funciones anónimas autoinvocadas no tienen una referencia por nombre,
+ * lo que crea un nuevo ámbito donde no se puede acceder al objeto directamente.
+ */
 
-// Las funciones anónimas autoinvocadas no tienen una referencia por nombre,
-// lo que crea un nuevo ámbito donde no se puede acceder al objeto directamente.
-(() => {
-  'use strict';
+const miModulo = (() => {
+  ('use strict');
 
   let deck = [];
   const types = ['C', 'D', 'H', 'S'],
     specials = ['A', 'J', 'Q', 'K'];
 
-  let puntosJugadores = [],
-    puntosJugador,
-    puntosComputadora;
+  let puntosJugadores = [];
+  let puntosJugador, puntosComputadora;
 
   // Referencias del HTML
   const btnNuevo = document.querySelector('#btnNuevo'),
     btnPedir = document.querySelector('#btnPedir'),
     btnDetener = document.querySelector('#btnDetener');
 
-  const divJugadorCartas = document.querySelector('#jugador-cartas'),
-    divComputadoraCartas = document.querySelector('#computadora-cartas'),
-    puntosHTML = document.querySelectorAll('small');
-
-  // Esta función inicializa el juego
-  window.addEventListener('load', () => inicializarJuego());
+  const puntosHTML = document.querySelectorAll('small');
+  const divCartasJugadores = document.querySelectorAll('.divCartas');
 
   const inicializarJuego = (numjugadores = 2) => {
     deck = crearDeck();
 
     puntosJugadores = [];
+    puntosJugador = 0;
+    puntosComputadora = 0;
 
     for (let i = 0; i < numjugadores; i++) {
       puntosJugadores.push(0);
     }
+
+    puntosHTML.forEach((elem) => (elem.innerText = 0));
+    divCartasJugadores.forEach((elem) => (elem.innerHTML = ''));
+
+    btnPedir.disabled = false;
+    btnDetener.disabled = false;
   };
 
   // Esta función crea una nueva baraja
@@ -73,8 +80,9 @@
   // Eventos
   btnPedir.addEventListener('click', () => {
     const carta = pedirCarta();
-    const { turno, totalPuntos } = acumularPuntos(carta, 0);
-    puntosJugador = totalPuntos;
+    const turno = acumularPuntos(carta, 0);
+
+    [puntosJugador] = puntosJugadores;
 
     insertarCarta(carta, turno);
 
@@ -88,7 +96,7 @@
     puntosJugadores[turno] += valorCarta(carta);
     puntosHTML[turno].innerText = puntosJugadores[turno];
 
-    return { turno, totalPuntos: puntosJugadores[turno] };
+    return turno;
   };
 
   const insertarCarta = (carta, turno) => {
@@ -97,48 +105,25 @@
     imgCarta.classList.add('carta');
 
     // Turno: 0 = primer jugador y el último será la computadora
-    if (turno === puntosJugadores.length - 1) {
-      divComputadoraCartas.append(imgCarta);
-    } else {
-      divJugadorCartas.append(imgCarta);
-    }
+    divCartasJugadores[turno].append(imgCarta);
   };
 
-  const reiniciarJuego = () => {
-    for (let puntos of puntosHTML) {
-      puntos.innerHTML = '0';
-    }
-
-    divJugadorCartas.innerHTML = '';
-    divComputadoraCartas.innerHTML = '';
-
-    puntosJugador = 0;
-    puntosComputadora = 0;
-
-    btnPedir.disabled = false;
-    btnDetener.disabled = false;
-  };
-
-  btnNuevo.addEventListener('click', () => {
-    inicializarJuego();
-    reiniciarJuego();
-  });
+  // btnNuevo.addEventListener('click', () => {
+  //   inicializarJuego();
+  // });
 
   // turno de la computadora
   const turnoComputadora = (puntosMinimos) => {
-    let carta, turno, totalPuntos;
+    let carta, turno;
 
     do {
       carta = pedirCarta();
 
-      ({ turno, totalPuntos } = acumularPuntos(
-        carta,
-        puntosJugadores.length - 1
-      ));
+      turno = acumularPuntos(carta, puntosJugadores.length - 1);
+
+      [, puntosComputadora] = puntosJugadores;
 
       insertarCarta(carta, turno);
-
-      puntosComputadora = totalPuntos;
 
       if (puntosMinimos >= 21) break;
     } while (puntosComputadora < puntosMinimos && puntosMinimos <= 21);
@@ -175,10 +160,18 @@
   };
 
   const desplegarAlerta = ({ title, icon }) => {
-    return Swal.fire({
-      title,
-      icon,
-      text: `Tú: ${puntosJugador} - PC: ${puntosComputadora}`,
-    });
+    return setTimeout(() => {
+      Swal.fire({
+        title,
+        icon,
+        text: `Tú: ${puntosJugador} - PC: ${puntosComputadora}`,
+      });
+    }, 1000);
+  };
+
+  // En la programación orientada a objetos (POO), solo lo que se devuelva como resultado de la función
+  // será público y visible fuera de este módulo, mientras que todo lo demás será privado
+  return {
+    nuevoJuego: inicializarJuego,
   };
 })();

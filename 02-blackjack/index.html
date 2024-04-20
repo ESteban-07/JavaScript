@@ -22,28 +22,33 @@
     <div class="row m-2">
       <div id="botones" class="col text-center">
         <button id="btnNuevo" class="btn btn-danger">Nuevo Juego</button>
-        <button id="btnPedir" class="btn btn-primary">Pedir carta</button>
-        <button id="btnDetener" class="btn btn-primary">Detener</button>
+        <button id="btnPedir" class="btn btn-primary" disabled>Pedir carta</button>
+        <button id="btnDetener" class="btn btn-primary" disabled>Detener</button>
       </div>
 
       <div class="row container">
         <div class="col">
           <h2>Jugador 1 - <small>0</small></h2>
-          <div id="jugador-cartas">
-            <!-- <img class="carta" src="./assets/cartas/10C.png" alt="carta" /> -->
-          </div>
+          <div id="jugador-cartas" class="divCartas"></div>
         </div>
       </div>
 
       <div class="row container">
         <div class="col">
           <h2>Computadora <small>0</small></h2>
-          <div id="computadora-cartas"></div>
+          <div id="computadora-cartas" class="divCartas"></div>
         </div>
       </div>
     </div>
 
     <script src="./assets/js/underscore-min.js"></script>
     <script src="./assets/js/juego.js"></script>
+
+    <script>
+      // Código con fines educativos
+      document.querySelector('#btnNuevo').addEventListener('click', () => {
+        miModulo.nuevoJuego();
+      });
+    </script>
   </body>
 </html>
