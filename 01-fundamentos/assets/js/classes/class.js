@@ -1,11 +1,35 @@
 class Persona {
-  // Propiedades y Métodos Estáticos
+  /**
+   * Propiedades y métodos estáticos
+   *
+   * Al trabajar con propiedades y métodos estáticos, no estamos operando sobre una instancia de clase,
+   * sino que interactuamos directamente con la estructura y las características estáticas de la clase.
+   */
+
+  static _conteo = 0;
+
+  /**
+   * Getter estático
+   *
+   * Este getter me permite acceder a un método que se comporta como una propiedad de la clase.
+   * Puedo usarlo directamente desde la clase Persona sin necesidad de crear una instancia.
+   */
+
+  static get conteo() {
+    return Persona._conteo + ' instancias';
+  }
+
+  static mensaje() {
+    console.log(this.nombre); // undefined
+    console.log('Hola a todos, soy un método stático');
+  }
+
   nombre = '';
   codigo = '';
   frase = '';
   comida = '';
 
-  // El constructor es un método que se va a ejecutar
+  // El constructor es un método que siempre se va a ejecutar
   // en el momento que se crea una nueva instancia de Persona
   constructor(
     nombre = 'Sin nombre',
@@ -15,6 +39,9 @@ class Persona {
     this.nombre = nombre;
     this.codigo = codigo;
     this.frase = frase;
+
+    // Hacemos referencia a la clase como tal, no a la instancia
+    Persona._conteo++;
   }
 
   // Sets y Gets
@@ -38,6 +65,10 @@ class Persona {
     this.quienSoy();
     console.log(`${this.codigo} dice: "${this.frase}"`);
   }
+
+  miConteo() {
+    console.log(this._conteo);
+  }
 }
 
 const spiderman = new Persona(
@@ -47,6 +78,7 @@ const spiderman = new Persona(
 );
 
 const ironman = new Persona('Tony Stark', 'Ironmam', 'Yo soy Ironman');
+
 // console.log(ironman);
 
 spiderman.miFrase();
@@ -55,5 +87,14 @@ spiderman.miFrase();
 spiderman.setComidaFavorita = 'El pie de cereza de la tía May';
 // spiderman.comida = 'Duende Verde'; // Esto es algo que puede suceder y se puede evitar con las propiedades privadas
 
-console.log(spiderman);
-console.log(spiderman.getComidaFavorita);
+// console.log(spiderman);
+// console.log(spiderman.getComidaFavorita);
+
+console.log('Conteo estático', Persona._conteo);
+console.log(Persona.conteo);
+Persona.mensaje();
+
+// No recomendable: crear una propiedad estática externa
+Persona.propiedadExterna = 'Hola Mundo';
+console.log(Persona.propiedadExterna);
+console.log({ Persona });
