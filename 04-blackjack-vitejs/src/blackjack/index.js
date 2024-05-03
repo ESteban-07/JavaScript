@@ -1,9 +1,7 @@
 import _ from "underscore";
 // import { crearDeck as crearNuevoDeck } from "./usecases/create-deck.js";
 // import crearDeck, { miNombre } from "./usecases/create-deck.js";
-import { crearDeck } from "./usecases/create-deck.js";
-import { valorCarta } from "./usecases/valor-carta.js";
-import { pedirCarta } from "./usecases/pedir-carta.js";
+import { crearDeck, pedirCarta, valorCarta } from "./usecases";
 
 /**
  * Patrón Módulo
