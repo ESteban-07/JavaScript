@@ -2,6 +2,8 @@ import _ from "underscore";
 // import { crearDeck as crearNuevoDeck } from "./usecases/create-deck.js";
 // import crearDeck, { miNombre } from "./usecases/create-deck.js";
 import { crearDeck } from "./usecases/create-deck.js";
+import { valorCarta } from "./usecases/valor-carta.js";
+import { pedirCarta } from "./usecases/pedir-carta.js";
 
 /**
  * Patrón Módulo
@@ -44,25 +46,9 @@ import { crearDeck } from "./usecases/create-deck.js";
     btnDetener.disabled = false;
   };
 
-  
-  // Esta función me permite tomar una carta
-  const pedirCarta = () => {
-    if (deck.length === 0) {
-      throw 'No hay cartas en el deck';
-    }
-
-    return deck.pop();
-  };
-
-  const valorCarta = (carta) => {
-    const valor = carta.substring(0, carta.length - 1);
-
-    return isNaN(valor) ? (valor === 'A' ? 11 : 10) : valor * 1;
-  };
-
   // Eventos
   btnPedir.addEventListener('click', () => {
-    const carta = pedirCarta();
+    const carta = pedirCarta(deck);
     const turno = acumularPuntos(carta, 0);
 
     [puntosJugador] = puntosJugadores;
@@ -100,7 +86,7 @@ import { crearDeck } from "./usecases/create-deck.js";
     let carta, turno;
 
     do {
-      carta = pedirCarta();
+      carta = pedirCarta(deck);
 
       turno = acumularPuntos(carta, puntosJugadores.length - 1);
 
