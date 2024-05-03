@@ -1,4 +1,6 @@
 import _ from "underscore";
+// import { crearDeck as crearNuevoDeck } from "./usecases/create-deck.js";
+// import crearDeck, { miNombre } from "./usecases/create-deck.js";
 import { crearDeck } from "./usecases/create-deck.js";
 
 /**
@@ -25,7 +27,7 @@ import { crearDeck } from "./usecases/create-deck.js";
   const divCartasJugadores = document.querySelectorAll('.divCartas');
 
   const inicializarJuego = (numjugadores = 2) => {
-    deck = crearDeck();
+    deck = crearDeck(types, specials);
 
     puntosJugadores = [];
     puntosJugador = 0;

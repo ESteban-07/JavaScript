@@ -1,8 +1,10 @@
 import _ from "underscore";
 
+export const miNombre = 'Esteban';
+
 // Esta función crea una nueva baraja
 export const crearDeck = (tiposDeCarta, tiposEspeciales) => {
-    deck = [];
+    let deck = [];
 
     // 2C, 2D, 2H, 2S
     for (let i = 2; i <= 10; i++) {
@@ -19,3 +21,5 @@ export const crearDeck = (tiposDeCarta, tiposEspeciales) => {
 
     return _.shuffle(deck);
   };
+
+  // export default crearDeck;
