@@ -1,3 +1,9 @@
+export { acumularPuntos } from "./acumular-puntos.js";
 export { crearDeck } from "./create-deck.js";
-export { valorCarta } from "./valor-carta.js";
+export { deshabilitarBotones } from "./deshabilitar-botones.js";
+export { desplegarAlerta } from "./desplegar-alerta.js";
+export { imprimirGanador } from "./imprimir-ganador.js";
+export { insertarCarta } from "./insertar-carta.js";
 export { pedirCarta } from "./pedir-carta.js";
+export { turnoComputadora } from "./turno-computadora.js";
+export { valorCarta } from "./valor-carta.js";
