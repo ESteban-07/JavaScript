@@ -16,10 +16,26 @@ const state = {
    filter: Filters.All,
 };
 
+// This is only for testing purpouses
+state.todos.push(new Todo('Nuevo todo', true), new Todo('Otro todo', true))
+
 const initStore = () => {
     console.log(state);
     console.log('Init Store 🥑');
 }
+
+const getTodos = (( filter = Filters.All ) => {
+    const todos = state.todos;
+
+    const filteredTodos = todos.filter(item => {
+        if (filter == 'all') return item;
+
+        return item.done === (filter == "Completed")
+
+    });
+
+    console.log({filteredTodos});
+})("Completed")
 
 const loadStore = () => {
     throw new Error('Not implemented')
