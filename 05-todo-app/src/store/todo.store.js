@@ -2,7 +2,7 @@ import { Todo } from '../todos/models/todo.model';
 
 // Filters con mayúscula será una unemeración
 const Filters = {
-    All: 'all',
+    All: 'All',
     Completed: 'Completed',
     Pending: 'Pending',
 };
@@ -16,26 +16,30 @@ const state = {
    filter: Filters.All,
 };
 
-// This is only for testing purpouses
-state.todos.push(new Todo('Nuevo todo', true), new Todo('Otro todo', true))
-
 const initStore = () => {
     console.log(state);
     console.log('Init Store 🥑');
 }
 
-const getTodos = (( filter = Filters.All ) => {
-    const todos = state.todos;
+const getTodos = ( filter = Filters.All ) => {
+    console.log('Filtering...');
 
-    const filteredTodos = todos.filter(item => {
-        if (filter == 'all') return item;
+    switch ( filter ) {
+        case Filters.All:
+            return [...state.todos];
 
-        return item.done === (filter == "Completed")
+        case Filters.Completed:
+            return state.todos.filter(todo => todo.done);
 
-    });
+        case Filters.Pending:
+            return state.todos.filter(todo => !todo.done);
 
-    console.log({filteredTodos});
-})("Completed")
+        default:
+            throw new Error(`Option ${ filter } is not valid`);
+    }
+}
+
+console.log(getTodos());
 
 const loadStore = () => {
     throw new Error('Not implemented')
@@ -46,7 +50,9 @@ const loadStore = () => {
  * @param { String } description 
  */
 const addTodo = ( description ) => {
-    throw new Error('Not implemented');
+    if ( !description ) throw new Error('Description is required');
+
+    state.todos.push( new Todo(description) );
 }
 
 /**
@@ -62,19 +68,28 @@ const toggleTodo = ( todoId ) => {
  * @param { String } todoId 
  */
 const deleteTodo = ( todoId ) => {
-    throw new Error('Not implemented');
-}
+    return state.todos.filter( todo => todo.id !== todoId );
+};
 
 const deleteCompleted = () => {
-    throw new Error('Not implemented');
+    return state.todos.filter( todo => !todo.done );
 }
 
+/**
+ * 
+ * @param { Filters } newFilter
+ */
 const setSelectedFilter = ( newFilter = Filters.All ) => {
-    throw new Error('Not implemented');
+
+    if (! (Object.keys(Filters)).includes(newFilter) ) {
+        throw new Error(`The filter ${ newFilter} is not valid`);
+    }
+
+    state.filter = newFilter;
 }
 
 const getCurrentFilter = () => {
-    throw new Error('Not implemented');
+    return state.filter;
 }
  
 export default {
@@ -82,6 +97,7 @@ export default {
     deleteCompleted,
     deleteTodo,
     getCurrentFilter,
+    getTodos,
     initStore,
     loadStore,
     setSelectedFilter,

@@ -5,10 +5,10 @@ export class Todo {
      * 
      * @param { String } description 
      */
-    constructor( description, done = false ) {
+    constructor( description ) {
         this.id = uuid();
         this.description = description;
-        this.done = done; //
+        this.done = false;
         this.createdAt = new Date();
     }
 }
