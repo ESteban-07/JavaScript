@@ -41,7 +41,6 @@ const getTodos = ( filter = Filters.All ) => {
     }
 }
 
-console.log(getTodos());
 
 const loadStore = () => {
     throw new Error('Not implemented')
