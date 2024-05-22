@@ -1,10 +1,11 @@
 
 import html from "./app.html?raw";
 import todoStore from "../store/todo.store";
-import { renderTodos } from "./use-cases";
+import { createTodoHTML, renderTodos } from "./use-cases";
 
 const ElementIDs = {
     TodoList: '.todo-list',
+    NewTodoInput: '#new-todo-input',
 }
 
 /**
@@ -26,5 +27,18 @@ export const App = (elementId) => {
 
         displayTodos();
     })();
+
+    // Recuperar valor del input e insertar un nuevo todo
+    document.querySelector( ElementIDs.NewTodoInput ).addEventListener('keydown', ( e ) => {
+        if ( e.key == 'Enter') {
+
+            todoStore.addTodo( e.currentTarget.value );
+
+            displayTodos();
+
+            e.currentTarget.value = "";
+        }
+
+    })
 
 }
