@@ -1,7 +1,7 @@
 
 import html from "./app.html?raw";
 import todoStore from "../store/todo.store";
-import { createTodoHTML, renderTodos } from "./use-cases";
+import { renderTodos } from "./use-cases";
 
 const ElementIDs = {
     TodoList: '.todo-list',
@@ -19,7 +19,8 @@ export const App = (elementId) => {
         renderTodos( ElementIDs.TodoList, todos )
     }
 
-    // Cunado la función App() se llama
+    // Funcion sincrona que crea el HTML
+    // Cuando la función App() se llama
     (() => {
         const app = document.createElement('div');
         app.innerHTML = html;
@@ -28,17 +29,16 @@ export const App = (elementId) => {
         displayTodos();
     })();
 
-    // Recuperar valor del input e insertar un nuevo todo
-    document.querySelector( ElementIDs.NewTodoInput ).addEventListener('keydown', ( e ) => {
-        if ( e.key == 'Enter') {
+    // Referencias HTML
+    const newDescriptionInput = document.querySelector( ElementIDs.NewTodoInput );
 
-            todoStore.addTodo( e.currentTarget.value );
+    // Listeners
+    newDescriptionInput.addEventListener('keyup', ( event ) => {
+        if ( event.keyCode !== 13 ) return;
+        if ( event.target.value.trim().length === 0 ) return;
 
-            displayTodos();
-
-            e.currentTarget.value = "";
-        }
-
-    })
-
+        todoStore.addTodo( event.target.value );
+        displayTodos();
+        event.target.value = '';
+    });
 }
