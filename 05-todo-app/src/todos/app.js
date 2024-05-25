@@ -6,7 +6,6 @@ import { renderTodos } from "./use-cases";
 const ElementIDs = {
     TodoList: '.todo-list',
     NewTodoInput: '#new-todo-input',
-    ToggleTodoInput: 'toggle',
 }
 
 /**
@@ -46,9 +45,19 @@ export const App = (elementId) => {
 
     todoListUL.addEventListener('click', ( event ) => {
         const element = event.target.closest('[data-id]');
+        if ( !element ) return;
 
-        if (event.target.classList.contains( ElementIDs.ToggleTodoInput )) {
-            todoStore.toggleTodo( element.dataset.id )
+        const elementId = element.dataset.id;
+        const targetClass = event.target.className;
+        
+
+        if (targetClass === "toggle" || targetClass === "destroy") {
+            
+            if ( targetClass === "toggle" ) {
+                todoStore.toggleTodo( elementId )
+            } else if ( targetClass === "destroy") {
+                todoStore.deleteTodo( elementId );
+            }
 
             displayTodos();
         }
