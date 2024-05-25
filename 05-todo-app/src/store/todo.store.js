@@ -77,6 +77,24 @@ const deleteTodo = ( todoId ) => {
     state.todos =  state.todos.filter( todo => todo.id !== todoId );
 };
 
+/**
+ * 
+ * @param { String } description 
+ * @param { String } todoId 
+ */
+const updateTodo = ( description, todoId ) => {
+    if ( !description || description.trim().length === 0 ) throw new Error("The description is required");
+    if ( !todoId ) throw new Error(`TodoId ${ todoId } not found`);
+
+    state.status = state.status.map(todo => {
+        if (todo.id === todoId) {
+            todo.description = description;
+        }
+
+        return todo;
+    });
+}
+
 const deleteCompleted = () => {
     return state.todos.filter( todo => !todo.done );
 }
@@ -108,4 +126,5 @@ export default {
     loadStore,
     setSelectedFilter,
     toggleTodo,
+    updateTodo,
 }
